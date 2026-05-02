@@ -275,6 +275,123 @@ function TrackCard({ num, label, title, meta, duration }: TrackCardProps) {
   );
 }
 
+function ContactSection() {
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
+
+  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((prev) => ({ ...prev, [k]: e.target.value }));
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("sending");
+    setErrors({});
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        setStatus("sent");
+        setForm({ name: "", email: "", subject: "", message: "" });
+      } else {
+        const data = await res.json();
+        setErrors(data.error ?? {});
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  const inputStyle: React.CSSProperties = {
+    background: "transparent", border: "none", outline: "none",
+    color: "var(--text)", fontFamily: "var(--font-body)", fontSize: "13px", width: "100%",
+  };
+
+  const S2 = {
+    section: { padding: "5rem 2.5rem", borderTop: "0.5px solid var(--border)" } as React.CSSProperties,
+  };
+
+  return (
+    <section id="contact" style={S2.section}>
+      <div className="reveal" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "3rem" }}>
+        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 800, letterSpacing: "-0.01em", textTransform: "uppercase", color: "var(--white)" }}>CONTACT</h2>
+        <span style={{ fontFamily: "var(--font-body)", fontSize: "11px", letterSpacing: "0.1em", color: "var(--muted)" }}>06 / 06</span>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem" }}>
+        <div className="reveal">
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 5vw, 4.5rem)", lineHeight: 1.05, color: "var(--white)", fontWeight: 800 }}>
+            Booking.<br />Press.<br />Collabs.<br />
+            <a href="mailto:gatorpoweraid@email.com" style={{ color: "var(--accent)", textDecoration: "none", display: "block" }}>
+              gatorpoweraid<br />@email.com
+            </a>
+          </p>
+        </div>
+
+        <div className="reveal">
+          {status === "sent" ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", paddingTop: "1rem" }}>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "2rem", fontWeight: 800, color: "var(--accent)" }}>Received.</div>
+              <p style={{ color: "var(--muted)", lineHeight: 1.7 }}>Message logged. I'll get back to you as soon as possible.</p>
+              <button
+                onClick={() => setStatus("idle")}
+                style={{ marginTop: "1rem", fontFamily: "var(--font-body)", fontSize: "11px", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", background: "transparent", border: "0.5px solid var(--border)", padding: "0.7rem 1.5rem", cursor: "crosshair", alignSelf: "flex-start", transition: "border-color 0.3s, color 0.3s" }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.color = "var(--accent)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--muted)"; }}
+              >
+                Send another →
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+              {(["name", "email", "subject"] as const).map((key) => (
+                <div key={key} style={{ borderBottom: "0.5px solid var(--border)", display: "flex", flexDirection: "column", padding: "1rem 0" }}>
+                  <label style={{ fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", color: errors[key] ? "#c0392b" : "var(--muted)", marginBottom: "0.5rem" }}>
+                    {key}{errors[key] ? ` — ${errors[key][0]}` : ""}
+                  </label>
+                  <input
+                    type={key === "email" ? "email" : "text"}
+                    value={form[key]}
+                    onChange={set(key)}
+                    placeholder={key === "email" ? "your@email.com" : key === "subject" ? "Booking / Press / Collab" : "Your name"}
+                    style={inputStyle}
+                  />
+                </div>
+              ))}
+              <div style={{ borderBottom: "0.5px solid var(--border)", display: "flex", flexDirection: "column", padding: "1rem 0" }}>
+                <label style={{ fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", color: errors.message ? "#c0392b" : "var(--muted)", marginBottom: "0.5rem" }}>
+                  message{errors.message ? ` — ${errors.message[0]}` : ""}
+                </label>
+                <textarea
+                  value={form.message}
+                  onChange={set("message")}
+                  placeholder="Tell me about it."
+                  style={{ ...inputStyle, resize: "none", minHeight: "80px" }}
+                />
+              </div>
+              {status === "error" && Object.keys(errors).length === 0 && (
+                <p style={{ fontSize: "11px", color: "#c0392b", marginTop: "0.75rem" }}>Something went wrong. Try again or email directly.</p>
+              )}
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                style={{ marginTop: "2rem", fontFamily: "var(--font-body)", fontSize: "11px", letterSpacing: "0.15em", textTransform: "uppercase", color: "#000", background: "var(--accent)", border: "none", padding: "0.9rem 2rem", cursor: status === "sending" ? "wait" : "crosshair", alignSelf: "flex-start", transition: "opacity 0.3s", opacity: status === "sending" ? 0.6 : 1 }}
+                onMouseEnter={(e) => { if (status !== "sending") e.currentTarget.style.opacity = "0.7"; }}
+                onMouseLeave={(e) => { if (status !== "sending") e.currentTarget.style.opacity = "1"; }}
+              >
+                {status === "sending" ? "Sending…" : "Send Message →"}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const [navScrolled, setNavScrolled] = useState(false);
   useScrollReveal();
@@ -651,48 +768,7 @@ export default function Home() {
       </section>
 
       {/* CONTACT */}
-      <section id="contact" style={S.section}>
-        <div className="reveal" style={S.sectionHeader}>
-          <h2 style={S.sectionTitle}>CONTACT</h2>
-          <span style={S.sectionIndex}>06 / 06</span>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem" }}>
-          <div className="reveal">
-            <p style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 5vw, 4.5rem)", lineHeight: 1.05, color: "var(--white)", fontWeight: 800 }}>
-              Booking.<br />Press.<br />Collabs.<br />
-              <a href="mailto:gatorpoweraid@email.com" style={{ color: "var(--accent)", textDecoration: "none", display: "block" }}>
-                gatorpoweraid<br />@email.com
-              </a>
-            </p>
-          </div>
-          <div className="reveal" style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-            {["Name", "Email", "Subject"].map((label) => (
-              <div key={label} style={{ borderBottom: "0.5px solid var(--border)", display: "flex", flexDirection: "column", padding: "1rem 0" }}>
-                <label style={{ fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.5rem" }}>{label}</label>
-                <input
-                  type={label === "Email" ? "email" : "text"}
-                  placeholder={label === "Email" ? "your@email.com" : label === "Subject" ? "Booking / Press / Collab" : "Your name"}
-                  style={{ background: "transparent", border: "none", outline: "none", color: "var(--text)", fontFamily: "var(--font-body)", fontSize: "13px" }}
-                />
-              </div>
-            ))}
-            <div style={{ borderBottom: "0.5px solid var(--border)", display: "flex", flexDirection: "column", padding: "1rem 0" }}>
-              <label style={{ fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.5rem" }}>Message</label>
-              <textarea
-                placeholder="Tell me about it."
-                style={{ background: "transparent", border: "none", outline: "none", color: "var(--text)", fontFamily: "var(--font-body)", fontSize: "13px", resize: "none", minHeight: "80px" }}
-              />
-            </div>
-            <button
-              style={{ marginTop: "2rem", fontFamily: "var(--font-body)", fontSize: "11px", letterSpacing: "0.15em", textTransform: "uppercase", color: "#000", background: "var(--accent)", border: "none", padding: "0.9rem 2rem", cursor: "crosshair", alignSelf: "flex-start", transition: "opacity 0.3s" }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-            >
-              Send Message →
-            </button>
-          </div>
-        </div>
-      </section>
+      <ContactSection />
 
       {/* FOOTER */}
       <footer style={{ padding: "2rem 2.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
