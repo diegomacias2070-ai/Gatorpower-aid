@@ -612,7 +612,7 @@ export default function Home() {
             { label: "Bandcamp", url: "https://gatorpower-aid.bandcamp.com/" },
             { label: "SoundCloud", url: "https://soundcloud.com/diego-macias-509791571" },
             { label: "Mixcloud", url: "https://www.mixcloud.com/DJParmesancheese/" },
-            { label: "Instagram", url: "#" },
+            { label: "Instagram", url: "https://www.instagram.com/vsuc/" },
           ].map(({ label, url }) => (
             <a
               key={label}
