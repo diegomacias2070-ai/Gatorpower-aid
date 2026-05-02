@@ -336,7 +336,7 @@ export default function Home() {
       <nav style={S.nav}>
         <a href="#hero" style={S.navLogo}>GPA</a>
         <ul style={S.navLinks}>
-          {["about", "music", "visuals", "gigs", "contact"].map((link) => (
+          {["about", "music", "visuals", "gigs", "press", "contact"].map((link) => (
             <li key={link}>
               <a
                 href={`#${link}`}
@@ -487,7 +487,7 @@ export default function Home() {
       <section id="visuals" style={S.section}>
         <div className="reveal" style={S.sectionHeader}>
           <h2 style={S.sectionTitle}>VISUALS</h2>
-          <span style={S.sectionIndex}>03 / 05</span>
+          <span style={S.sectionIndex}>03 / 06</span>
         </div>
         <div className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1px", background: "var(--border)" }}>
           {[
@@ -533,7 +533,7 @@ export default function Home() {
       <section id="gigs" style={S.section}>
         <div className="reveal" style={S.sectionHeader}>
           <h2 style={S.sectionTitle}>GIGS</h2>
-          <span style={S.sectionIndex}>04 / 05</span>
+          <span style={S.sectionIndex}>04 / 06</span>
         </div>
         <div className="reveal" style={{ display: "flex", flexDirection: "column" }}>
           {gigs.map((gig, i) => (
@@ -559,11 +559,102 @@ export default function Home() {
         </div>
       </section>
 
+      {/* PRESS */}
+      <section id="press" style={S.section}>
+        <div className="reveal" style={S.sectionHeader}>
+          <h2 style={S.sectionTitle}>PRESS</h2>
+          <span style={S.sectionIndex}>05 / 06</span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem" }}>
+
+          {/* Left — bio + facts */}
+          <div className="reveal" style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
+            <div>
+              <div style={{ fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "1rem" }}>Short Bio</div>
+              <p style={{ color: "var(--text)", lineHeight: 1.8 }}>
+                Gatorpower-Aid is a San Diego-based DJ and producer operating at the edges of electronic music. Drawing from industrial texture, algorithmic rhythm, and pixel-era nostalgia, their DJ sets resist easy categorization — blending genres with surgical precision. A regular on NTS Radio, Gatorpower-Aid has built a reputation for dense, hyperlinked sets that treat genre as raw material.
+              </p>
+            </div>
+
+            <div>
+              <div style={{ fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "1rem" }}>Key Facts</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 0, border: "0.5px solid var(--border)" }}>
+                {[
+                  ["Based", "San Diego, CA"],
+                  ["Active", "2022 – Present"],
+                  ["Genres", "Industrial · Left-Field Techno · Chiptune Trap"],
+                  ["Broadcast", "NTS Radio"],
+                  ["Tools", "Ableton · Drum Machines · Step Sequencers"],
+                  ["Booking", "gatorpoweraid@email.com"],
+                ].map(([k, v]) => (
+                  <div key={k} style={{ display: "grid", gridTemplateColumns: "110px 1fr", borderBottom: "0.5px solid var(--border)", padding: "0.75rem 1rem" }}>
+                    <span style={{ fontSize: "10px", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }}>{k}</span>
+                    <span style={{ fontSize: "12px", color: "var(--text)" }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right — links + download */}
+          <div className="reveal" style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
+            <div>
+              <div style={{ fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "1rem" }}>Profiles</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1px", border: "0.5px solid var(--border)" }}>
+                {[
+                  { label: "SoundCloud", url: "https://soundcloud.com/diego-macias-509791571", sub: "soundcloud.com/diego-macias-509791571" },
+                  { label: "Bandcamp", url: "https://gatorpower-aid.bandcamp.com/", sub: "gatorpower-aid.bandcamp.com" },
+                  { label: "Mixcloud", url: "https://www.mixcloud.com/DJParmesancheese/", sub: "mixcloud.com/DJParmesancheese" },
+                  { label: "Instagram", url: "https://www.instagram.com/vsuc/", sub: "instagram.com/vsuc" },
+                ].map(({ label, url, sub }) => (
+                  <a
+                    key={label}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.9rem 1rem", background: "var(--surface)", textDecoration: "none", transition: "background 0.25s" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--surface2)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "var(--surface)")}
+                  >
+                    <div>
+                      <div style={{ fontSize: "10px", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.2rem" }}>{label}</div>
+                      <div style={{ fontSize: "11px", color: "var(--text)" }}>{sub}</div>
+                    </div>
+                    <span style={{ color: "var(--accent)", fontSize: "12px" }}>↗</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "1rem" }}>One-Pager EPK</div>
+              <a
+                href="/epk.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1.2rem 1.5rem", border: "0.5px solid var(--accent)", background: "transparent", textDecoration: "none", transition: "background 0.3s, color 0.3s", cursor: "crosshair" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent)"; (e.currentTarget.querySelector(".epk-label") as HTMLElement).style.color = "#000"; (e.currentTarget.querySelector(".epk-arrow") as HTMLElement).style.color = "#000"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; (e.currentTarget.querySelector(".epk-label") as HTMLElement).style.color = "var(--white)"; (e.currentTarget.querySelector(".epk-arrow") as HTMLElement).style.color = "var(--accent)"; }}
+              >
+                <div>
+                  <div style={{ fontSize: "10px", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.25rem" }}>Download / Print</div>
+                  <div className="epk-label" style={{ fontFamily: "var(--font-display)", fontSize: "1.2rem", color: "var(--white)", fontWeight: 700, transition: "color 0.3s" }}>
+                    Press Kit — One Pager
+                  </div>
+                </div>
+                <span className="epk-arrow" style={{ fontSize: "1.5rem", color: "var(--accent)", transition: "color 0.3s" }}>↗</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* CONTACT */}
       <section id="contact" style={S.section}>
         <div className="reveal" style={S.sectionHeader}>
           <h2 style={S.sectionTitle}>CONTACT</h2>
-          <span style={S.sectionIndex}>05 / 05</span>
+          <span style={S.sectionIndex}>06 / 06</span>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem" }}>
           <div className="reveal">

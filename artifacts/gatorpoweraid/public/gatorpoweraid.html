@@ -306,6 +306,28 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
 .footer-links a { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
 .footer-links a:hover { color: var(--accent); }
 
+/* PRESS */
+.press-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+.press-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; margin-top: 2rem; }
+.press-label:first-child { margin-top: 0; }
+.press-bio { color: var(--text); line-height: 1.8; margin-bottom: 2rem; }
+.press-facts { display: flex; flex-direction: column; border: 0.5px solid var(--border); }
+.press-fact { display: grid; grid-template-columns: 90px 1fr; border-bottom: 0.5px solid var(--border); padding: 0.6rem 1rem; }
+.press-fact:last-child { border-bottom: none; }
+.press-fact-key { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding-top: 1px; }
+.press-fact-val { font-size: 11px; color: var(--text); }
+.press-links { display: flex; flex-direction: column; gap: 1px; border: 0.5px solid var(--border); }
+.press-link { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--surface); text-decoration: none; transition: background 0.25s; color: var(--accent); }
+.press-link:hover { background: var(--surface2); }
+.press-link-platform { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.2rem; }
+.press-link-url { font-size: 11px; color: var(--text); }
+.press-epk-btn { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; border: 0.5px solid var(--accent); background: transparent; text-decoration: none; transition: background 0.3s; cursor: crosshair; }
+.press-epk-btn:hover { background: var(--accent); }
+.press-epk-btn:hover .press-epk-title, .press-epk-btn:hover .press-epk-arrow { color: #000; }
+.press-epk-btn:hover .press-link-platform { color: rgba(0,0,0,0.6); }
+.press-epk-title { font-family: var(--font-display); font-size: 1.2rem; color: var(--white); font-weight: 700; transition: color 0.3s; }
+.press-epk-arrow { font-size: 1.5rem; color: var(--accent); transition: color 0.3s; }
+
 /* STREAM EMBEDS */
 .stream-embeds {
   margin-top: 3rem;
@@ -380,6 +402,7 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
     <li><a href="#music">Music</a></li>
     <li><a href="#visuals">Visuals</a></li>
     <li><a href="#gigs">Gigs</a></li>
+    <li><a href="#press">Press</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -530,7 +553,7 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
 <section id="visuals">
   <div class="section-header reveal">
     <h2 class="section-title">VISUALS</h2>
-    <span class="section-index">03 / 05</span>
+    <span class="section-index">03 / 06</span>
   </div>
   <div class="visuals-grid reveal">
     <div class="visual-item"><canvas class="visual-canvas" id="v1"></canvas><div class="visual-label">Live visuals — 2024</div></div>
@@ -546,7 +569,7 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
 <section id="gigs">
   <div class="section-header reveal">
     <h2 class="section-title">GIGS</h2>
-    <span class="section-index">04 / 05</span>
+    <span class="section-index">04 / 06</span>
   </div>
   <div class="gigs-list reveal">
     <div class="gig-row"><div class="gig-date">JUN 14&#10;2025</div><div class="gig-name">VOID COLLECTIVE</div><div class="gig-location">Observatory North Park · San Diego, CA</div><div class="gig-tag upcoming">Upcoming</div></div>
@@ -558,11 +581,70 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
   </div>
 </section>
 
+<!-- PRESS -->
+<section id="press">
+  <div class="section-header reveal">
+    <h2 class="section-title">PRESS</h2>
+    <span class="section-index">05 / 06</span>
+  </div>
+  <div class="press-grid">
+
+    <!-- Left: bio + facts -->
+    <div class="reveal">
+      <div class="press-label">Short Bio</div>
+      <p class="press-bio">Gatorpower-Aid is a San Diego-based DJ and producer operating at the edges of electronic music. Drawing from industrial texture, algorithmic rhythm, and pixel-era nostalgia, their DJ sets resist easy categorization — blending genres with surgical precision. A regular on NTS Radio, Gatorpower-Aid has built a reputation for dense, hyperlinked sets that treat genre as raw material.</p>
+
+      <div class="press-label">Key Facts</div>
+      <div class="press-facts">
+        <div class="press-fact"><span class="press-fact-key">Based</span><span class="press-fact-val">San Diego, CA</span></div>
+        <div class="press-fact"><span class="press-fact-key">Active</span><span class="press-fact-val">2022 – Present</span></div>
+        <div class="press-fact"><span class="press-fact-key">Genres</span><span class="press-fact-val">Industrial · Left-Field Techno · Chiptune Trap</span></div>
+        <div class="press-fact"><span class="press-fact-key">Broadcast</span><span class="press-fact-val">NTS Radio</span></div>
+        <div class="press-fact"><span class="press-fact-key">Tools</span><span class="press-fact-val">Ableton · Drum Machines · Step Sequencers</span></div>
+        <div class="press-fact"><span class="press-fact-key">Booking</span><span class="press-fact-val">gatorpoweraid@email.com</span></div>
+      </div>
+    </div>
+
+    <!-- Right: profiles + EPK -->
+    <div class="reveal">
+      <div class="press-label">Profiles</div>
+      <div class="press-links">
+        <a class="press-link" href="https://soundcloud.com/diego-macias-509791571" target="_blank" rel="noopener noreferrer">
+          <div><div class="press-link-platform">SoundCloud</div><div class="press-link-url">soundcloud.com/diego-macias-509791571</div></div>
+          <span>↗</span>
+        </a>
+        <a class="press-link" href="https://gatorpower-aid.bandcamp.com/" target="_blank" rel="noopener noreferrer">
+          <div><div class="press-link-platform">Bandcamp</div><div class="press-link-url">gatorpower-aid.bandcamp.com</div></div>
+          <span>↗</span>
+        </a>
+        <a class="press-link" href="https://www.mixcloud.com/DJParmesancheese/" target="_blank" rel="noopener noreferrer">
+          <div><div class="press-link-platform">Mixcloud</div><div class="press-link-url">mixcloud.com/DJParmesancheese</div></div>
+          <span>↗</span>
+        </a>
+        <a class="press-link" href="https://www.instagram.com/vsuc/" target="_blank" rel="noopener noreferrer">
+          <div><div class="press-link-platform">Instagram</div><div class="press-link-url">instagram.com/vsuc</div></div>
+          <span>↗</span>
+        </a>
+      </div>
+
+      <div class="press-label" style="margin-top:2rem;">One-Pager EPK</div>
+      <a href="/epk.html" target="_blank" rel="noopener noreferrer" class="press-epk-btn">
+        <div>
+          <div class="press-link-platform">Download / Print</div>
+          <div class="press-epk-title">Press Kit — One Pager</div>
+        </div>
+        <span class="press-epk-arrow">↗</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact">
   <div class="section-header reveal">
     <h2 class="section-title">CONTACT</h2>
-    <span class="section-index">05 / 05</span>
+    <span class="section-index">06 / 06</span>
   </div>
   <div class="contact-grid">
     <div class="reveal">
