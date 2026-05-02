@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { requireAuth } from "./admin";
 
 const router = Router();
 
@@ -38,6 +39,20 @@ router.post("/subscribe", (req, res) => {
   req.log.info({ id: entry.id }, "New mailing list subscriber");
 
   res.status(201).json({ ok: true });
+});
+
+router.get("/admin/subscribers", requireAuth, (_req, res) => {
+  res.json({ subscribers });
+});
+
+router.delete("/admin/subscribers/:id", requireAuth, (req, res) => {
+  const idx = subscribers.findIndex((s) => s.id === req.params.id);
+  if (idx === -1) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  subscribers.splice(idx, 1);
+  res.json({ ok: true });
 });
 
 export { subscribers };
