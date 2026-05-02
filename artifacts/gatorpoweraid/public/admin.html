@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPA — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #080808; --surface: #111; --surface2: #181818;
+  --border: #222; --text: #e2e2dc; --muted: #585852;
+  --accent: #9a9a94; --white: #ececea; --red: #c0392b;
+  --font-d: 'Syne', sans-serif; --font-b: 'DM Mono', monospace;
+}
+body { background: var(--bg); color: var(--text); font-family: var(--font-b); font-size: 13px; min-height: 100vh; }
+
+/* NAV */
+nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 0.5px solid var(--border); position: sticky; top: 0; background: rgba(8,8,8,0.95); backdrop-filter: blur(8px); z-index: 100; }
+.nav-logo { font-family: var(--font-d); font-weight: 800; font-size: 0.9rem; color: var(--white); text-decoration: none; letter-spacing: 0.02em; }
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-badge { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); border: 0.5px solid var(--border); padding: 0.25rem 0.6rem; }
+.logout-btn { font-family: var(--font-b); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); background: none; border: none; cursor: pointer; transition: color 0.2s; }
+.logout-btn:hover { color: var(--accent); }
+
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+
+/* LOGIN */
+#login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+.login-box { width: 100%; max-width: 400px; }
+.login-title { font-family: var(--font-d); font-size: 2.5rem; font-weight: 800; color: var(--white); margin-bottom: 0.5rem; }
+.login-sub { font-size: 11px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-bottom: 3rem; }
+.login-field { border-bottom: 0.5px solid var(--border); padding: 0.75rem 0; margin-bottom: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.login-label { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.login-input { background: transparent; border: none; outline: none; color: var(--text); font-family: var(--font-b); font-size: 14px; letter-spacing: 0.04em; width: 100%; }
+.login-error { font-size: 11px; color: var(--red); margin-top: 0.75rem; min-height: 1rem; }
+.login-btn { margin-top: 2rem; font-family: var(--font-b); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 0.9rem 2rem; cursor: pointer; transition: opacity 0.2s; width: 100%; }
+.login-btn:hover { opacity: 0.75; }
+.login-btn:disabled { opacity: 0.5; cursor: wait; }
+
+/* DASHBOARD */
+#dashboard-page { padding: 3rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+.dash-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; }
+.dash-title { font-family: var(--font-d); font-size: 2rem; font-weight: 800; color: var(--white); }
+.dash-count { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; }
+
+/* FILTER BAR */
+.filter-bar { display: flex; gap: 1px; margin-bottom: 2rem; }
+.filter-btn { font-family: var(--font-b); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.4rem 0.9rem; background: var(--surface); border: none; color: var(--muted); cursor: pointer; transition: background 0.2s, color 0.2s; }
+.filter-btn.active, .filter-btn:hover { background: var(--accent); color: #000; }
+
+/* SUBMISSIONS TABLE */
+.submissions { display: flex; flex-direction: column; border: 0.5px solid var(--border); }
+.sub-row { display: grid; grid-template-columns: 140px 1fr 1fr 80px; gap: 1.5rem; align-items: center; padding: 1rem 1.25rem; border-bottom: 0.5px solid var(--border); transition: background 0.2s; }
+.sub-row:last-child { border-bottom: none; }
+.sub-row:hover { background: var(--surface2); }
+.sub-row.unread { border-left: 2px solid var(--accent); }
+.sub-meta { display: flex; flex-direction: column; gap: 0.2rem; }
+.sub-date { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
+.sub-id { font-size: 9px; color: #333; letter-spacing: 0.04em; }
+.sub-main { display: flex; flex-direction: column; gap: 0.2rem; }
+.sub-subject { font-family: var(--font-d); font-size: 1rem; font-weight: 700; color: var(--white); }
+.sub-name { font-size: 10px; color: var(--muted); }
+.sub-email { font-size: 10px; color: var(--accent); text-decoration: none; }
+.sub-email:hover { text-decoration: underline; }
+.sub-preview { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sub-actions { display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-end; }
+.action-btn { font-family: var(--font-b); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.25rem 0.6rem; background: transparent; border: 0.5px solid var(--border); color: var(--muted); cursor: pointer; transition: border-color 0.2s, color 0.2s; white-space: nowrap; }
+.action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.action-btn.delete:hover { border-color: var(--red); color: var(--red); }
+
+/* EMPTY STATE */
+.empty-state { padding: 4rem; text-align: center; border: 0.5px solid var(--border); }
+.empty-icon { font-size: 2rem; color: var(--border); margin-bottom: 1rem; }
+.empty-text { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; }
+
+/* MODAL (detail view) */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 2rem; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--bg); border: 0.5px solid var(--border); width: 100%; max-width: 580px; max-height: 85vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 0.5px solid var(--border); }
+.modal-title { font-family: var(--font-d); font-size: 1.1rem; font-weight: 700; color: var(--white); }
+.modal-close { background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; line-height: 1; }
+.modal-close:hover { color: var(--white); }
+.modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 0; }
+.modal-field { border-bottom: 0.5px solid var(--border); padding: 0.75rem 0; }
+.modal-field:last-child { border-bottom: none; }
+.modal-field-label { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+.modal-field-val { font-size: 13px; color: var(--text); line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+.modal-footer { padding: 1rem 1.5rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--accent); color: #000; font-family: var(--font-b); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.7rem 1.25rem; z-index: 300; opacity: 0; transform: translateY(8px); transition: opacity 0.3s, transform 0.3s; }
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 0.5px solid var(--border); margin-bottom: 2rem; }
+.stat-cell { background: var(--bg); padding: 1rem 1.25rem; }
+.stat-num { font-family: var(--font-d); font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.2rem; }
+.stat-label { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- NAV (hidden until logged in) -->
+<nav id="admin-nav" style="display:none;">
+  <a href="/" class="nav-logo">GPA <span style="color:var(--muted);font-weight:400;font-size:0.7rem;">/ admin</span></a>
+  <div class="nav-right">
+    <span class="nav-badge">Restricted</span>
+    <button class="logout-btn" onclick="logout()">Log out</button>
+  </div>
+</nav>
+
+<!-- LOGIN PAGE -->
+<div id="login-page">
+  <div class="login-box">
+    <div class="login-title">GPA</div>
+    <div class="login-sub">Admin Access</div>
+    <form id="login-form" onsubmit="doLogin(event)">
+      <div class="login-field">
+        <label class="login-label">Password</label>
+        <input class="login-input" id="pw-input" type="password" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <div class="login-error" id="login-error"></div>
+      <button class="login-btn" id="login-btn" type="submit">Enter →</button>
+    </form>
+  </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div id="dashboard-page" style="display:none;">
+  <div class="stats-row" id="stats-row">
+    <div class="stat-cell"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Total</div></div>
+    <div class="stat-cell"><div class="stat-num" id="stat-booking">—</div><div class="stat-label">Booking</div></div>
+    <div class="stat-cell"><div class="stat-num" id="stat-press">—</div><div class="stat-label">Press</div></div>
+    <div class="stat-cell"><div class="stat-num" id="stat-other">—</div><div class="stat-label">Other</div></div>
+  </div>
+
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">Inbox</div>
+      <div class="dash-count" id="dash-count">Loading…</div>
+    </div>
+    <button class="action-btn" onclick="loadSubmissions()" style="padding:0.5rem 1rem;">↻ Refresh</button>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+    <button class="filter-btn" onclick="setFilter('booking', this)">Booking</button>
+    <button class="filter-btn" onclick="setFilter('press', this)">Press</button>
+    <button class="filter-btn" onclick="setFilter('collab', this)">Collab</button>
+    <button class="filter-btn" onclick="setFilter('other', this)">Other</button>
+  </div>
+
+  <div class="submissions" id="submissions-list"></div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-subject">—</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field"><div class="modal-field-label">From</div><div class="modal-field-val" id="modal-name">—</div></div>
+      <div class="modal-field"><div class="modal-field-label">Email</div><div class="modal-field-val"><a id="modal-email" href="#" class="sub-email">—</a></div></div>
+      <div class="modal-field"><div class="modal-field-label">Received</div><div class="modal-field-val" id="modal-date">—</div></div>
+      <div class="modal-field"><div class="modal-field-label">Message</div><div class="modal-field-val" id="modal-message">—</div></div>
+    </div>
+    <div class="modal-footer">
+      <a id="modal-reply" href="#" class="action-btn" target="_blank">Reply via Email ↗</a>
+      <button class="action-btn delete" id="modal-delete-btn" onclick="deleteFromModal()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+let token = sessionStorage.getItem('gpa_admin_token') || '';
+let allSubmissions = [];
+let currentFilter = 'all';
+let modalId = null;
+
+if (token) tryEnterDashboard();
+
+async function doLogin(e) {
+  e.preventDefault();
+  const pw = document.getElementById('pw-input').value;
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+  err.textContent = '';
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      token = data.token;
+      sessionStorage.setItem('gpa_admin_token', token);
+      tryEnterDashboard();
+    } else {
+      err.textContent = 'Wrong password.';
+      btn.disabled = false;
+      btn.textContent = 'Enter →';
+    }
+  } catch {
+    err.textContent = 'Connection error. Try again.';
+    btn.disabled = false;
+    btn.textContent = 'Enter →';
+  }
+}
+
+function tryEnterDashboard() {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('dashboard-page').style.display = 'block';
+  document.getElementById('admin-nav').style.display = 'flex';
+  loadSubmissions();
+}
+
+function logout() {
+  sessionStorage.removeItem('gpa_admin_token');
+  token = '';
+  allSubmissions = [];
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('dashboard-page').style.display = 'none';
+  document.getElementById('admin-nav').style.display = 'none';
+  document.getElementById('pw-input').value = '';
+}
+
+async function loadSubmissions() {
+  try {
+    const res = await fetch('/api/contact', {
+      headers: { Authorization: 'Bearer ' + token },
+    });
+    if (res.status === 401) { logout(); return; }
+    const data = await res.json();
+    allSubmissions = (data.submissions || []).slice().reverse();
+    renderSubmissions();
+    updateStats();
+  } catch {
+    showToast('Failed to load submissions');
+  }
+}
+
+function updateStats() {
+  const total = allSubmissions.length;
+  const booking = allSubmissions.filter(s => /booking/i.test(s.subject)).length;
+  const press = allSubmissions.filter(s => /press/i.test(s.subject)).length;
+  const other = total - booking - press;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-booking').textContent = booking;
+  document.getElementById('stat-press').textContent = press;
+  document.getElementById('stat-other').textContent = Math.max(0, other);
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSubmissions();
+}
+
+function filtered() {
+  if (currentFilter === 'all') return allSubmissions;
+  if (currentFilter === 'other') return allSubmissions.filter(s =>
+    !/booking|press|collab/i.test(s.subject));
+  return allSubmissions.filter(s => new RegExp(currentFilter, 'i').test(s.subject));
+}
+
+function renderSubmissions() {
+  const list = document.getElementById('submissions-list');
+  const items = filtered();
+  document.getElementById('dash-count').textContent =
+    items.length + ' submission' + (items.length !== 1 ? 's' : '');
+
+  if (!items.length) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">□</div>
+      <div class="empty-text">No submissions yet</div>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = items.map(s => `
+    <div class="sub-row" id="row-${s.id}">
+      <div class="sub-meta">
+        <span class="sub-date">${fmtDate(s.receivedAt)}</span>
+        <span class="sub-id">${s.id.slice(0,8)}…</span>
+      </div>
+      <div class="sub-main">
+        <span class="sub-subject">${esc(s.subject)}</span>
+        <span class="sub-name">${esc(s.name)}</span>
+        <a class="sub-email" href="mailto:${esc(s.email)}">${esc(s.email)}</a>
+      </div>
+      <div class="sub-preview">${esc(s.message)}</div>
+      <div class="sub-actions">
+        <button class="action-btn" onclick="openModal('${s.id}')">View</button>
+        <button class="action-btn delete" onclick="deleteRow('${s.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openModal(id) {
+  const s = allSubmissions.find(x => x.id === id);
+  if (!s) return;
+  modalId = id;
+  document.getElementById('modal-subject').textContent = s.subject;
+  document.getElementById('modal-name').textContent = s.name;
+  document.getElementById('modal-email').textContent = s.email;
+  document.getElementById('modal-email').href = 'mailto:' + s.email;
+  document.getElementById('modal-date').textContent = new Date(s.receivedAt).toLocaleString();
+  document.getElementById('modal-message').textContent = s.message;
+  document.getElementById('modal-reply').href =
+    'mailto:' + s.email + '?subject=Re: ' + encodeURIComponent(s.subject);
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal')) return;
+  document.getElementById('modal').classList.remove('open');
+  modalId = null;
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('modal').classList.remove('open'); });
+
+async function deleteRow(id) {
+  allSubmissions = allSubmissions.filter(s => s.id !== id);
+  renderSubmissions();
+  updateStats();
+  showToast('Submission removed');
+}
+
+function deleteFromModal() {
+  if (modalId) {
+    deleteRow(modalId);
+    document.getElementById('modal').classList.remove('open');
+    modalId = null;
+  }
+}
+
+function fmtDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })
+    + '\n' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+}
+
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { requireAuth } from "./admin";
 
 const router = Router();
 
@@ -44,7 +45,7 @@ router.post("/contact", (req, res) => {
   res.status(201).json({ ok: true, id: entry.id });
 });
 
-router.get("/contact", (_req, res) => {
+router.get("/contact", requireAuth, (_req, res) => {
   res.json({ submissions });
 });
 
