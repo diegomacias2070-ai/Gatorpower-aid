@@ -108,91 +108,6 @@ function HeroCanvas() {
   return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0 }} />;
 }
 
-function VisualCanvas({ id, type }: { id: string; type: number }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const cv = canvasRef.current;
-    if (!cv) return;
-    const ctx = cv.getContext("2d")!;
-
-    function draw() {
-      cv!.width = cv!.offsetWidth;
-      cv!.height = cv!.offsetHeight;
-      const w = cv!.width, h = cv!.height;
-      const palettes = [
-        ["#9a9a94", "#0f0f0f", "#2a2a2a"],
-        ["#1e1e1e", "#6a6a65", "#303030"],
-        ["#080808", "#888882", "#222222"],
-        ["#9a9a94", "#1a1a1a", "#404040"],
-        ["#0a0a0a", "#7a7a76", "#585852"],
-        ["#181818", "#e2e2dc", "#2a2a2a"],
-      ];
-      const palette = palettes[id.charCodeAt(id.length - 1) - "1".charCodeAt(0)] ?? palettes[0];
-
-      ctx.fillStyle = palette[1];
-      ctx.fillRect(0, 0, w, h);
-
-      if (type === 0) {
-        ctx.strokeStyle = palette[0];
-        ctx.lineWidth = 0.5;
-        ctx.globalAlpha = 0.25;
-        for (let x = 0; x < w; x += Math.floor(w / 12)) {
-          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + Math.random() * 30 - 15, h); ctx.stroke();
-        }
-        ctx.globalAlpha = 1;
-        for (let i = 0; i < 5; i++) {
-          ctx.fillStyle = palette[0];
-          ctx.globalAlpha = 0.6;
-          ctx.fillRect(Math.random() * w, Math.random() * h, Math.random() * 70 + 8, Math.random() * 2 + 0.5);
-        }
-      } else if (type === 1) {
-        const pxSize = Math.floor(w / 20);
-        for (let px = 0; px < w; px += pxSize) {
-          for (let py = 0; py < h; py += pxSize) {
-            const r = Math.random();
-            if (r < 0.12) {
-              ctx.fillStyle = palette[0];
-              ctx.globalAlpha = Math.random() * 0.7 + 0.1;
-              ctx.fillRect(px, py, pxSize - 1, pxSize - 1);
-            } else if (r < 0.2) {
-              ctx.fillStyle = palette[2];
-              ctx.globalAlpha = 0.5;
-              ctx.fillRect(px, py, pxSize - 1, pxSize - 1);
-            }
-          }
-        }
-      } else if (type === 2) {
-        const bars = 60;
-        const bw = w / bars;
-        for (let i = 0; i < bars; i++) {
-          const bh = Math.random() * h * 0.65 + h * 0.05;
-          ctx.fillStyle = palette[0];
-          ctx.globalAlpha = Math.random() * 0.55 + 0.1;
-          ctx.fillRect(i * bw, h - bh, bw - 1, bh);
-        }
-      } else {
-        ctx.strokeStyle = palette[0];
-        ctx.lineWidth = 0.5;
-        for (let i = 0; i < 15; i++) {
-          const inset = i * (Math.min(w, h) / 30);
-          ctx.globalAlpha = (1 - i / 15) * 0.5;
-          ctx.strokeRect(inset, inset, w - inset * 2, h - inset * 2);
-        }
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = palette[0];
-        ctx.fillRect(w * 0.3, h * 0.45, w * 0.4, 1);
-      }
-      ctx.globalAlpha = 1;
-    }
-
-    draw();
-    window.addEventListener("resize", draw);
-    return () => window.removeEventListener("resize", draw);
-  }, [id, type]);
-
-  return <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block" }} />;
-}
 
 interface TrackCardProps {
   num: string;
@@ -275,6 +190,60 @@ function TrackCard({ num, label, title, meta, duration }: TrackCardProps) {
   );
 }
 
+function MailingListBanner() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email) return;
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      setStatus(res.ok ? "done" : "error");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <div style={{ borderTop: "0.5px solid var(--border)", borderBottom: "0.5px solid var(--border)", padding: "2.5rem 2.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "2rem", flexWrap: "wrap" }}>
+      <div>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.1rem, 2.5vw, 1.6rem)", fontWeight: 800, color: "var(--white)", lineHeight: 1.1 }}>Stay in the loop.</div>
+        <div style={{ fontSize: "11px", color: "var(--muted)", marginTop: "0.4rem", letterSpacing: "0.06em" }}>Gig announcements · new releases · nothing else.</div>
+      </div>
+      {status === "done" ? (
+        <div style={{ fontFamily: "var(--font-display)", fontSize: "1rem", fontWeight: 700, color: "var(--accent)" }}>You're in. ↗</div>
+      ) : (
+        <form onSubmit={handleSubmit} style={{ display: "flex", gap: "1px", flex: "0 0 auto" }}>
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            style={{ background: "var(--surface)", border: "0.5px solid var(--border)", outline: "none", color: "var(--text)", fontFamily: "var(--font-body)", fontSize: "12px", padding: "0.7rem 1.2rem", width: "220px", letterSpacing: "0.04em" }}
+          />
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            style={{ fontFamily: "var(--font-body)", fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", color: "#000", background: "var(--accent)", border: "none", padding: "0.7rem 1.4rem", cursor: status === "sending" ? "wait" : "crosshair", whiteSpace: "nowrap", transition: "opacity 0.2s", opacity: status === "sending" ? 0.6 : 1 }}
+            onMouseEnter={(e) => { if (status !== "sending") e.currentTarget.style.opacity = "0.7"; }}
+            onMouseLeave={(e) => { if (status !== "sending") e.currentTarget.style.opacity = "1"; }}
+          >
+            {status === "sending" ? "…" : "Subscribe →"}
+          </button>
+          {status === "error" && <div style={{ fontSize: "10px", color: "#c0392b", alignSelf: "center", marginLeft: "0.75rem" }}>Try again.</div>}
+        </form>
+      )}
+    </div>
+  );
+}
+
 function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -319,7 +288,7 @@ function ContactSection() {
     <section id="contact" style={S2.section}>
       <div className="reveal" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "3rem" }}>
         <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 800, letterSpacing: "-0.01em", textTransform: "uppercase", color: "var(--white)" }}>CONTACT</h2>
-        <span style={{ fontFamily: "var(--font-body)", fontSize: "11px", letterSpacing: "0.1em", color: "var(--muted)" }}>06 / 06</span>
+        <span style={{ fontFamily: "var(--font-body)", fontSize: "11px", letterSpacing: "0.1em", color: "var(--muted)" }}>05 / 05</span>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem" }}>
         <div className="reveal">
@@ -420,8 +389,6 @@ export default function Home() {
     { date: "SEP 14\n2024", name: "LOW FREQUENCY", location: "Brick by Brick · San Diego, CA", upcoming: false },
   ];
 
-  const visualTypes = [0, 1, 2, 3, 1, 0];
-
   const S: Record<string, React.CSSProperties> = {
     nav: {
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
@@ -453,7 +420,7 @@ export default function Home() {
       <nav style={S.nav}>
         <a href="#hero" style={S.navLogo}>GPA</a>
         <ul style={S.navLinks}>
-          {["about", "music", "visuals", "gigs", "press", "contact"].map((link) => (
+          {["about", "music", "gigs", "press", "contact"].map((link) => (
             <li key={link}>
               <a
                 href={`#${link}`}
@@ -502,6 +469,7 @@ export default function Home() {
         <div className="reveal" style={S.sectionHeader}>
           <h2 style={S.sectionTitle}>ABOUT</h2>
           <span style={S.sectionIndex}>01 / 05</span>
+
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "start" }}>
           <div className="reveal" style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
@@ -535,6 +503,7 @@ export default function Home() {
         <div className="reveal" style={S.sectionHeader}>
           <h2 style={S.sectionTitle}>MUSIC</h2>
           <span style={S.sectionIndex}>02 / 05</span>
+
         </div>
         <div className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1px", background: "var(--border)", border: "0.5px solid var(--border)" }}>
           {tracks.map((t) => <TrackCard key={t.num} {...t} />)}
@@ -600,57 +569,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* VISUALS */}
-      <section id="visuals" style={S.section}>
-        <div className="reveal" style={S.sectionHeader}>
-          <h2 style={S.sectionTitle}>VISUALS</h2>
-          <span style={S.sectionIndex}>03 / 06</span>
-        </div>
-        <div className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1px", background: "var(--border)" }}>
-          {[
-            { id: "v1", label: "Live visuals — 2024" },
-            { id: "v2", label: "Cover art — Pixel Cascade" },
-            { id: "v3", label: "NTS Session" },
-            { id: "v4", label: "Greyzone — still" },
-            { id: "v5", label: "8-Bit Funeral — art" },
-            { id: "v6", label: "Static Altar — render" },
-          ].map((v, i) => (
-            <div
-              key={v.id}
-              style={{ aspectRatio: "1", background: "var(--surface)", overflow: "hidden", position: "relative", cursor: "crosshair" }}
-              onMouseEnter={(e) => {
-                const label = e.currentTarget.querySelector(".v-label") as HTMLElement;
-                if (label) label.style.transform = "translateY(0)";
-              }}
-              onMouseLeave={(e) => {
-                const label = e.currentTarget.querySelector(".v-label") as HTMLElement;
-                if (label) label.style.transform = "translateY(100%)";
-              }}
-            >
-              <VisualCanvas id={v.id} type={visualTypes[i]} />
-              <div
-                className="v-label"
-                style={{
-                  position: "absolute", bottom: 0, left: 0, right: 0,
-                  padding: "0.75rem", fontSize: "10px", letterSpacing: "0.12em",
-                  textTransform: "uppercase", color: "var(--muted)",
-                  background: "linear-gradient(transparent, rgba(8,8,8,0.85))",
-                  transform: "translateY(100%)",
-                  transition: "transform 0.4s ease",
-                }}
-              >
-                {v.label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* GIGS */}
       <section id="gigs" style={S.section}>
         <div className="reveal" style={S.sectionHeader}>
           <h2 style={S.sectionTitle}>GIGS</h2>
-          <span style={S.sectionIndex}>04 / 06</span>
+          <span style={S.sectionIndex}>03 / 05</span>
         </div>
         <div className="reveal" style={{ display: "flex", flexDirection: "column" }}>
           {gigs.map((gig, i) => (
@@ -680,7 +603,7 @@ export default function Home() {
       <section id="press" style={S.section}>
         <div className="reveal" style={S.sectionHeader}>
           <h2 style={S.sectionTitle}>PRESS</h2>
-          <span style={S.sectionIndex}>05 / 06</span>
+          <span style={S.sectionIndex}>04 / 05</span>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem" }}>
 
@@ -766,6 +689,9 @@ export default function Home() {
 
         </div>
       </section>
+
+      {/* MAILING LIST */}
+      <MailingListBanner />
 
       {/* CONTACT */}
       <ContactSection />

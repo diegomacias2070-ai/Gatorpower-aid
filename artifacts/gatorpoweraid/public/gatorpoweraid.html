@@ -306,6 +306,16 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
 .footer-links a { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
 .footer-links a:hover { color: var(--accent); }
 
+/* MAILING LIST */
+.mailing-bar { border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 2.5rem; display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
+.mailing-heading { font-family: var(--font-display); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 800; color: var(--white); line-height: 1.1; }
+.mailing-sub { font-size: 11px; color: var(--muted); margin-top: 0.4rem; letter-spacing: 0.06em; }
+.mailing-form { display: flex; gap: 1px; }
+.mailing-input { background: var(--surface); border: 0.5px solid var(--border); outline: none; color: var(--text); font-family: var(--font-body); font-size: 12px; padding: 0.7rem 1.2rem; width: 220px; letter-spacing: 0.04em; }
+.mailing-btn { font-family: var(--font-body); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 0.7rem 1.4rem; cursor: crosshair; white-space: nowrap; transition: opacity 0.2s; }
+.mailing-btn:hover { opacity: 0.75; }
+.mailing-success { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--accent); }
+
 /* PRESS */
 .press-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
 .press-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; margin-top: 2rem; }
@@ -400,7 +410,6 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#music">Music</a></li>
-    <li><a href="#visuals">Visuals</a></li>
     <li><a href="#gigs">Gigs</a></li>
     <li><a href="#press">Press</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -549,27 +558,11 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
 
 </section>
 
-<!-- VISUALS -->
-<section id="visuals">
-  <div class="section-header reveal">
-    <h2 class="section-title">VISUALS</h2>
-    <span class="section-index">03 / 06</span>
-  </div>
-  <div class="visuals-grid reveal">
-    <div class="visual-item"><canvas class="visual-canvas" id="v1"></canvas><div class="visual-label">Live visuals — 2024</div></div>
-    <div class="visual-item"><canvas class="visual-canvas" id="v2"></canvas><div class="visual-label">Cover art — Pixel Cascade</div></div>
-    <div class="visual-item"><canvas class="visual-canvas" id="v3"></canvas><div class="visual-label">NTS Session</div></div>
-    <div class="visual-item"><canvas class="visual-canvas" id="v4"></canvas><div class="visual-label">Greyzone — still</div></div>
-    <div class="visual-item"><canvas class="visual-canvas" id="v5"></canvas><div class="visual-label">8-Bit Funeral — art</div></div>
-    <div class="visual-item"><canvas class="visual-canvas" id="v6"></canvas><div class="visual-label">Static Altar — render</div></div>
-  </div>
-</section>
-
 <!-- GIGS -->
 <section id="gigs">
   <div class="section-header reveal">
     <h2 class="section-title">GIGS</h2>
-    <span class="section-index">04 / 06</span>
+    <span class="section-index">03 / 05</span>
   </div>
   <div class="gigs-list reveal">
     <div class="gig-row"><div class="gig-date">JUN 14&#10;2025</div><div class="gig-name">VOID COLLECTIVE</div><div class="gig-location">Observatory North Park · San Diego, CA</div><div class="gig-tag upcoming">Upcoming</div></div>
@@ -585,7 +578,7 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
 <section id="press">
   <div class="section-header reveal">
     <h2 class="section-title">PRESS</h2>
-    <span class="section-index">05 / 06</span>
+    <span class="section-index">04 / 05</span>
   </div>
   <div class="press-grid">
 
@@ -640,11 +633,25 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
   </div>
 </section>
 
+<!-- MAILING LIST -->
+<div class="mailing-bar" id="mailing-bar">
+  <div>
+    <div class="mailing-heading">Stay in the loop.</div>
+    <div class="mailing-sub">Gig announcements · new releases · nothing else.</div>
+  </div>
+  <div id="mailing-form-wrap">
+    <form class="mailing-form" onsubmit="doSubscribe(event)">
+      <input class="mailing-input" type="email" id="mailing-email" placeholder="your@email.com" required>
+      <button class="mailing-btn" type="submit" id="mailing-btn">Subscribe →</button>
+    </form>
+  </div>
+</div>
+
 <!-- CONTACT -->
 <section id="contact">
   <div class="section-header reveal">
     <h2 class="section-title">CONTACT</h2>
-    <span class="section-index">06 / 06</span>
+    <span class="section-index">05 / 05</span>
   </div>
   <div class="contact-grid">
     <div class="reveal">
@@ -814,11 +821,30 @@ function drawVisual(cv, palette, type) {
   ctx.globalAlpha = 1;
 }
 
-function initVisuals() {
-  for (let i = 1; i <= 6; i++) drawVisual(document.getElementById('v'+i), palettes[i-1], visualTypes[i-1]);
+async function doSubscribe(e) {
+  e.preventDefault();
+  const email = document.getElementById('mailing-email').value;
+  const btn = document.getElementById('mailing-btn');
+  btn.textContent = '…';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    if (res.ok) {
+      document.getElementById('mailing-form-wrap').innerHTML =
+        '<div class="mailing-success">You\'re in. ↗</div>';
+    } else {
+      btn.textContent = 'Try again';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = 'Try again';
+    btn.disabled = false;
+  }
 }
-window.addEventListener('load', initVisuals);
-window.addEventListener('resize', initVisuals);
 </script>
 </body>
 </html>
