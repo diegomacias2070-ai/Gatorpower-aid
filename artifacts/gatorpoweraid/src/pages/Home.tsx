@@ -322,7 +322,7 @@ export default function Home() {
     hero: { position: "relative" as const, height: "100vh", display: "flex", flexDirection: "column" as const, justifyContent: "flex-end", padding: "0 2.5rem 4rem", overflow: "hidden" },
     heroContent: { position: "relative", zIndex: 1 },
     heroLabel: { fontSize: "11px", letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "var(--muted)", marginBottom: "0.75rem", fontFamily: "var(--font-body)" },
-    heroName: { fontFamily: "var(--font-display)", fontSize: "clamp(5rem, 14vw, 14rem)", lineHeight: 0.88, letterSpacing: "-0.01em", color: "var(--white)", marginBottom: "2rem", fontWeight: 800 },
+    heroName: { fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 5.8vw, 6.5rem)", lineHeight: 0.9, letterSpacing: "-0.01em", color: "var(--white)", marginBottom: "2rem", fontWeight: 800, whiteSpace: "nowrap" as const },
     section: { padding: "5rem 2.5rem", borderBottom: "0.5px solid var(--border)" },
     sectionHeader: { display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "3rem", paddingBottom: "1rem", borderBottom: "0.5px solid var(--border)" },
     sectionTitle: { fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 6vw, 5rem)", letterSpacing: "0.02em", color: "var(--white)", lineHeight: 1, fontWeight: 800 },
