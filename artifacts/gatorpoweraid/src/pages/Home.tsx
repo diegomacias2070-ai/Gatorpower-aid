@@ -366,12 +366,15 @@ export default function Home() {
               ))}
             </div>
             <a
-              href="#music"
+              href="https://soundcloud.com/diego-macias-509791571"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{ fontFamily: "var(--font-body)", fontSize: "11px", letterSpacing: "0.15em", textTransform: "uppercase", color: "#000", background: "var(--accent)", border: "none", padding: "0.7rem 1.5rem", cursor: "crosshair", textDecoration: "none", transition: "opacity 0.3s" }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
               Latest Set ↓
+            
             </a>
           </div>
         </div>
@@ -546,15 +549,22 @@ export default function Home() {
         <span style={{ fontFamily: "var(--font-display)", fontSize: "1rem", color: "var(--muted)", fontWeight: 700 }}>GATORPOWER-AID</span>
         <span style={{ fontSize: "10px", letterSpacing: "0.1em", color: "var(--muted)" }}>© 2025 — San Diego, CA</span>
         <div style={{ display: "flex", gap: "1.5rem" }}>
-          {["NTS", "SoundCloud", "Instagram", "Bandcamp"].map((link) => (
+          {[
+            { label: "Bandcamp", url: "https://gatorpower-aid.bandcamp.com/" },
+            { label: "SoundCloud", url: "https://soundcloud.com/diego-macias-509791571" },
+            { label: "Mixcloud", url: "https://www.mixcloud.com/DJParmesancheese/" },
+            { label: "Instagram", url: "#" },
+          ].map(({ label, url }) => (
             <a
-              key={link}
-              href="#"
+              key={label}
+              href={url}
+              target={url !== "#" ? "_blank" : undefined}
+              rel={url !== "#" ? "noopener noreferrer" : undefined}
               style={{ fontSize: "10px", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.3s" }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
             >
-              {link}
+              {label}
             </a>
           ))}
         </div>
