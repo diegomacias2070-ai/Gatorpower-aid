@@ -306,6 +306,50 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
 .footer-links a { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
 .footer-links a:hover { color: var(--accent); }
 
+/* STREAM EMBEDS */
+.stream-embeds {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border: 0.5px solid var(--border);
+}
+.stream-block {
+  background: var(--surface);
+  padding: 1.5rem 1.5rem 0;
+  display: block;
+  text-decoration: none;
+}
+.stream-block iframe { display: block; border: none; }
+.stream-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+.stream-bandcamp {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s;
+}
+.stream-bandcamp:hover { background: var(--surface2); }
+.stream-bandcamp .stream-label { margin-bottom: 0.5rem; }
+.stream-bc-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--white);
+  font-weight: 700;
+}
+.stream-bc-arrow {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 /* SCROLL REVEAL */
 .reveal { opacity: 0; transform: translateY(14px); transition: opacity 1s ease, transform 1s ease; }
 .reveal.visible { opacity: 1; transform: none; }
@@ -448,6 +492,38 @@ footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; al
       </div>
     </div>
   </div>
+
+  <!-- STREAM EMBEDS -->
+  <div class="reveal stream-embeds">
+
+    <div class="stream-block">
+      <div class="stream-label">Stream — SoundCloud</div>
+      <iframe
+        width="100%" height="300"
+        scrolling="no" frameborder="no" allow="autoplay"
+        src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/diego-macias-509791571&color=%239a9a94&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true">
+      </iframe>
+    </div>
+
+    <div class="stream-block">
+      <div class="stream-label">Mixes — Mixcloud</div>
+      <iframe
+        width="100%" height="180"
+        frameborder="no"
+        src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&mini=0&feed=%2FDJParmesancheese%2F&hide_artwork=0&dark=1">
+      </iframe>
+    </div>
+
+    <a href="https://gatorpower-aid.bandcamp.com/" target="_blank" rel="noopener noreferrer" class="stream-block stream-bandcamp">
+      <div>
+        <div class="stream-label">Buy / Download — Bandcamp</div>
+        <div class="stream-bc-title">gatorpower-aid.bandcamp.com</div>
+      </div>
+      <span class="stream-bc-arrow">Visit ↗</span>
+    </a>
+
+  </div>
+
 </section>
 
 <!-- VISUALS -->

@@ -422,6 +422,65 @@ export default function Home() {
         <div className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1px", background: "var(--border)", border: "0.5px solid var(--border)" }}>
           {tracks.map((t) => <TrackCard key={t.num} {...t} />)}
         </div>
+
+        {/* STREAM EMBEDS */}
+        <div className="reveal" style={{ marginTop: "3rem", display: "flex", flexDirection: "column", gap: "1px", border: "0.5px solid var(--border)" }}>
+
+          {/* SoundCloud */}
+          <div style={{ background: "var(--surface)", padding: "1.5rem 1.5rem 0" }}>
+            <div style={{ fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "1rem" }}>
+              Stream — SoundCloud
+            </div>
+            <iframe
+              width="100%"
+              height="300"
+              scrolling="no"
+              frameBorder="no"
+              allow="autoplay"
+              style={{ display: "block", border: "none" }}
+              src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/diego-macias-509791571&color=%239a9a94&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"
+            />
+          </div>
+
+          {/* Mixcloud */}
+          <div style={{ background: "var(--surface)", padding: "1.5rem 1.5rem 0" }}>
+            <div style={{ fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "1rem" }}>
+              Mixes — Mixcloud
+            </div>
+            <iframe
+              width="100%"
+              height="180"
+              frameBorder="no"
+              style={{ display: "block", border: "none" }}
+              src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&mini=0&feed=%2FDJParmesancheese%2F&hide_artwork=0&dark=1"
+            />
+          </div>
+
+          {/* Bandcamp */}
+          <a
+            href="https://gatorpower-aid.bandcamp.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none", display: "block", background: "var(--surface)", padding: "1.5rem", transition: "background 0.3s" }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--surface2)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "var(--surface)")}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <div style={{ fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.5rem" }}>
+                  Buy / Download — Bandcamp
+                </div>
+                <div style={{ fontFamily: "var(--font-display)", fontSize: "1.4rem", color: "var(--white)", fontWeight: 700 }}>
+                  gatorpower-aid.bandcamp.com
+                </div>
+              </div>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: "11px", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)" }}>
+                Visit ↗
+              </span>
+            </div>
+          </a>
+
+        </div>
       </section>
 
       {/* VISUALS */}
